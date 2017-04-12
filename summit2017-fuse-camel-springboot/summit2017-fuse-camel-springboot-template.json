@@ -8,17 +8,17 @@
       "iconClass": "icon-jboss",
       "version": "2.0"
     },
-    "name": "summit2017-fuse-camel-springboot"
+    "name": "summit2017-fuse-camel-sb"
   },
   "labels": {
-    "template": "summit2017-fuse-camel-springboot"
+    "template": "summit2017-fuse-camel-sb"
   },
   "parameters": [
     {
       "name": "APP_NAME",
       "displayName": "Application Name",
       "required": true,
-      "value": "summit2017-fuse-camel-springboot",
+      "value": "summit2017-fuse-camel-sb",
       "description": "The name assigned to the application."
     },
     {

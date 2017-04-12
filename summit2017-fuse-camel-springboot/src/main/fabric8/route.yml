@@ -1,10 +1,10 @@
 metadata:
-  name: summit2017-fuse-camel-sp
+  name: summit2017-fuse-camel-sb
 spec:
   host: people-service.rhel-cdk.10.1.2.2.xip.io
   to:
     kind: Service
-    name: summit2017-fuse-camel-sp
+    name: summit2017-fuse-camel-sb
     weight: 100
   port:
     targetPort: http
