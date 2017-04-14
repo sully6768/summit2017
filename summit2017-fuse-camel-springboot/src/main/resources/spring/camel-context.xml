@@ -19,19 +19,21 @@
     xmlns="http://www.springframework.org/schema/beans"
     xmlns:camel="http://camel.apache.org/schema/spring"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd           http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+    xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
     <!-- a bean for user services -->
     <bean
-        class="com.redhat.jboss.fuse.UserService"
-        id="userService" />
+        id="userService"
+        class="com.redhat.jboss.fuse.UserService" />
     <!-- Definition for CamelHttpTransportServlet bean -->
     <bean
-        class="org.apache.camel.component.servlet.CamelHttpTransportServlet"
-        id="camelHttpTransportServlet" />
+        id="camelHttpTransportServlet"
+        class="org.apache.camel.component.servlet.CamelHttpTransportServlet" />
     <!-- Definition for ServletRegistrationBean bean -->
     <bean
-        class="org.springframework.boot.web.servlet.ServletRegistrationBean"
-        id="servletRegistrationBean">
+        id="servletRegistrationBean"
+        class="org.springframework.boot.web.servlet.ServletRegistrationBean">
         <constructor-arg
             index="0"
             ref="camelHttpTransportServlet" />
@@ -55,17 +57,19 @@
         <!-- also enable swagger api, using the apiContextPath
              and enable CORS so the swagger-ui web console can access the swagger api docs -->
         <restConfiguration
-            apiContextListing="false"
-            apiContextPath="/api-docs"
-            bindingMode="json"
             component="servlet"
+            bindingMode="json"
             contextPath="/people-service/*"
-            enableCORS="true"
-            port="8080">
+            port="8080"
+            apiContextPath="/api-docs"
+            apiContextListing="false"
+            enableCORS="true">
+
             <!-- we want json output in pretty mode -->
             <dataFormatProperty
                 key="prettyPrint"
                 value="true" />
+            
             <!-- setup swagger api descriptions -->
             <apiProperty
                 key="base.path"
@@ -82,54 +86,61 @@
             <apiProperty
                 key="api.contact.name"
                 value="The Apache Camel team" />
+
         </restConfiguration>
+
         <!-- defines the rest services using the context-path /user -->
         <rest
-            apiDocs="true"
-            consumes="application/json"
             path="/user"
-            produces="application/json">
+            consumes="application/json"
+            produces="application/json"
+            apiDocs="true">
             <description>User rest service</description>
+            
             <!-- this is a rest GET to view an user by the given id -->
             <get
-                outType="com.redhat.jboss.fuse.User"
-                uri="/{id}">
+                uri="/{id}"
+                outType="com.redhat.jboss.fuse.User">
                 <description>Find user by id</description>
                 <param
-                    dataType="integer"
-                    description="The id of the user to get"
                     name="id"
-                    type="path" />
+                    type="path"
+                    description="The id of the user to get"
+                    dataType="integer" />
                 <responseMessage message="The user that was found" />
                 <responseMessage
                     code="404"
                     message="User not found" />
-                <to uri="direct:getUsers" />
+                <to uri="direct:userId" />
             </get>
+
             <!-- this is a rest PUT to create/update an user -->
             <put type="com.redhat.jboss.fuse.User">
                 <description>Updates or create a user</description>
                 <param
-                    description="The user to update or create"
                     name="body"
-                    type="body" />
+                    type="body"
+                    description="The user to update or create" />
                 <to uri="bean:userService?method=updateUser" />
             </put>
+
             <!-- this is a rest GET to find all users -->
             <get
-                outType="com.redhat.jboss.fuse.User[]"
-                uri="/findAll">
+                uri="/findAll"
+                outType="com.redhat.jboss.fuse.User[]">
                 <description>Find all users</description>
                 <responseMessage message="All the users" />
                 <to uri="bean:userService?method=listUsers" />
             </get>
         </rest>
+
         <!-- defines the rest services using the context-path /echo -->
         <rest
-            consumes="application/text"
             path="/echo"
+            consumes="application/text"
             produces="application/text">
             <description>Echo rest service</description>
+
             <get uri="/ping">
                 <description>A ping service</description>
                 <route>
@@ -138,22 +149,19 @@
                     </transform>
                 </route>
             </get>
+
         </rest>
-        <route id="_route1">
-            <from
-                id="_from1"
-                uri="direct:getUsers" />
-            <to
-                id="_to1"
-                uri="bean:userService?method=getUser(${header.id})" />
-            <filter id="_filter1">
+
+        <route>
+            <from uri="direct:userId" />
+            <to uri="bean:userService?method=getUser(${header.id})" />
+            <filter>
                 <simple>${body} == null</simple>
-                <setHeader
-                    headerName="Exchange.HTTP_RESPONSE_CODE"
-                    id="_setHeader1">
+                <setHeader headerName="Exchange.HTTP_RESPONSE_CODE">
                     <constant>404</constant>
                 </setHeader>
             </filter>
         </route>
     </camelContext>
+
 </beans>
