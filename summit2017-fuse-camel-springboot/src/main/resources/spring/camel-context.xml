@@ -17,26 +17,21 @@
 -->
 <beans
     xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:camel="http://camel.apache.org/schema/spring"
-    xsi:schemaLocation="
-          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-          http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
-
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd           http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
     <!-- a bean for user services -->
     <bean
-        id="userService"
-        class="com.redhat.jboss.fuse.UserService" />
-    
+        class="com.redhat.jboss.fuse.UserService"
+        id="userService" />
     <!-- Definition for CamelHttpTransportServlet bean -->
     <bean
-        id="camelHttpTransportServlet"
-        class="org.apache.camel.component.servlet.CamelHttpTransportServlet"></bean>
-        
+        class="org.apache.camel.component.servlet.CamelHttpTransportServlet"
+        id="camelHttpTransportServlet" />
     <!-- Definition for ServletRegistrationBean bean -->
     <bean
-        id="servletRegistrationBean"
-        class="org.springframework.boot.web.servlet.ServletRegistrationBean">
+        class="org.springframework.boot.web.servlet.ServletRegistrationBean"
+        id="servletRegistrationBean">
         <constructor-arg
             index="0"
             ref="camelHttpTransportServlet" />
@@ -47,11 +42,9 @@
             name="name"
             value="CamelServlet" />
     </bean>
-
     <camelContext
         id="myCamel"
         xmlns="http://camel.apache.org/schema/spring">
-
         <!-- configure rest to use the camel-servlet component, and use json binding mode -->
         <!-- and tell to output json in pretty print mode -->
         <!-- setup context path and port number that Apache Tomcat will deploy this application with,
@@ -61,21 +54,18 @@
              You can access the RestRegistry from JMX at runtime -->
         <!-- also enable swagger api, using the apiContextPath
              and enable CORS so the swagger-ui web console can access the swagger api docs -->
-
         <restConfiguration
-            component="servlet"
-            bindingMode="json"
-            contextPath="/people-service/*"
-            port="8080"
-            apiContextPath="/api-docs"
             apiContextListing="false"
-            enableCORS="true">
-
+            apiContextPath="/api-docs"
+            bindingMode="json"
+            component="servlet"
+            contextPath="/people-service/*"
+            enableCORS="true"
+            port="8080">
             <!-- we want json output in pretty mode -->
             <dataFormatProperty
                 key="prettyPrint"
                 value="true" />
-            
             <!-- setup swagger api descriptions -->
             <apiProperty
                 key="base.path"
@@ -92,61 +82,54 @@
             <apiProperty
                 key="api.contact.name"
                 value="The Apache Camel team" />
-
         </restConfiguration>
-
         <!-- defines the rest services using the context-path /user -->
         <rest
-            path="/user"
+            apiDocs="true"
             consumes="application/json"
-            produces="application/json"
-            apiDocs="true">
+            path="/user"
+            produces="application/json">
             <description>User rest service</description>
-            
             <!-- this is a rest GET to view an user by the given id -->
             <get
-                uri="/{id}"
-                outType="com.redhat.jboss.fuse.User">
+                outType="com.redhat.jboss.fuse.User"
+                uri="/{id}">
                 <description>Find user by id</description>
                 <param
-                    name="id"
-                    type="path"
+                    dataType="integer"
                     description="The id of the user to get"
-                    dataType="integer" />
+                    name="id"
+                    type="path" />
                 <responseMessage message="The user that was found" />
                 <responseMessage
                     code="404"
                     message="User not found" />
                 <to uri="direct:getUsers" />
             </get>
-
             <!-- this is a rest PUT to create/update an user -->
             <put type="com.redhat.jboss.fuse.User">
                 <description>Updates or create a user</description>
                 <param
+                    description="The user to update or create"
                     name="body"
-                    type="body"
-                    description="The user to update or create" />
+                    type="body" />
                 <to uri="bean:userService?method=updateUser" />
             </put>
-
             <!-- this is a rest GET to find all users -->
             <get
-                uri="/findAll"
-                outType="com.redhat.jboss.fuse.User[]">
+                outType="com.redhat.jboss.fuse.User[]"
+                uri="/findAll">
                 <description>Find all users</description>
                 <responseMessage message="All the users" />
                 <to uri="bean:userService?method=listUsers" />
             </get>
         </rest>
-
         <!-- defines the rest services using the context-path /echo -->
         <rest
-            path="/echo"
             consumes="application/text"
+            path="/echo"
             produces="application/text">
             <description>Echo rest service</description>
-
             <get uri="/ping">
                 <description>A ping service</description>
                 <route>
@@ -155,20 +138,22 @@
                     </transform>
                 </route>
             </get>
-
         </rest>
-
-        <route>
-            <from uri="direct:getUsers" />
-            <to uri="bean:userService?method=getUser(${header.id})" />
-            <filter>
+        <route id="_route1">
+            <from
+                id="_from1"
+                uri="direct:getUsers" />
+            <to
+                id="_to1"
+                uri="bean:userService?method=getUser(${header.id})" />
+            <filter id="_filter1">
                 <simple>${body} == null</simple>
-                <setHeader headerName="Exchange.HTTP_RESPONSE_CODE">
+                <setHeader
+                    headerName="Exchange.HTTP_RESPONSE_CODE"
+                    id="_setHeader1">
                     <constant>404</constant>
                 </setHeader>
             </filter>
         </route>
-
     </camelContext>
-
 </beans>
