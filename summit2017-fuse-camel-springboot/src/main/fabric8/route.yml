@@ -1,7 +1,7 @@
 metadata:
   name: summit2017-fuse-camel-sb
 spec:
-  host: people-service.rhel-cdk.10.1.2.2.xip.io
+  host: people-service.apps.127.0.0.1.nip.io
   to:
     kind: Service
     name: summit2017-fuse-camel-sb
@@ -11,7 +11,7 @@ spec:
   wildcardPolicy: None
 status:
   ingress:
-    - host: people-service.rhel-cdk.10.1.2.2.xip.io
+    - host: people-service.apps.127.0.0.1.nip.io
       conditions:
         - type: Admitted
           status: 'True'
