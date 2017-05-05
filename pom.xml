@@ -12,6 +12,7 @@
     <modules>
         <module>summit2017-fuse-camel-eap</module>
         <module>summit2017-fuse-camel-springboot</module>
+        <module>summit2017-fuse-camel-karaf</module>
     </modules>
 
 

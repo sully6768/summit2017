@@ -1,4 +1,4 @@
-package org.test;
+package com.redhat.jboss.fuse;
 
 import java.io.File;
 
@@ -14,6 +14,8 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import com.redhat.jboss.fuse.MyBean;
 
 @RunWith(Arquillian.class)
 public class MyTest {
