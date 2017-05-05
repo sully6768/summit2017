@@ -1,8 +1,8 @@
-# Spring-Boot and Camel XML QuickStart
+# Spring-Boot Camel QuickStart
 
-This example demonstrates how to configure Camel routes in Spring Boot via a Spring XML configuration file.
+This example demonstrates how you can use Apache Camel with Spring Boot.
 
-The application utilizes the Spring [`@ImportResource`](http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/context/annotation/ImportResource.html) annotation to load a Camel Context definition via a [camel-context.xml](src/main/resources/spring/camel-context.xml) file on the classpath.
+The quickstart uses Spring Boot to configure a little application that includes a Camel route that triggers a message every 5th second, and routes the message to a log.
 
 ### Building
 
@@ -20,6 +20,8 @@ The example can be built and run on OpenShift using a single goal:
 
     mvn fabric8:deploy
 
+When the example runs in OpenShift, you can use the OpenShift client tool to inspect the status
+
 To list all the running pods:
 
     oc get pods
@@ -28,7 +30,8 @@ Then find the name of the pod that runs this quickstart, and output the logs fro
 
     oc logs <name of pod>
 
-You can also use the OpenShift [web console](https://docs.openshift.com/container-platform/3.3/getting_started/developers_console.html#developers-console-video) to manage the running pods, and view logs and much more.
+You can also use the openshift [web console](https://docs.openshift.com/container-platform/3.3/getting_started/developers_console.html#developers-console-video) to manage the
+running pods, and view logs and much more.
 
 ### Running via an S2I Application Template
 
@@ -40,7 +43,15 @@ First, import the Fuse image streams:
 
 Then create the quickstart template:
 
-    oc create -f https://raw.githubusercontent.com/jboss-fuse/application-templates/GA/quickstarts/spring-boot-camel-xml-template.json
+    oc create -f https://raw.githubusercontent.com/jboss-fuse/application-templates/GA/quickstarts/spring-boot-camel-template.json
 
 Now when you use "Add to Project" button in the OpenShift console, you should see a template for this quickstart. 
 
+### Integration Testing
+
+The example includes a [fabric8 arquillian](https://github.com/fabric8io/fabric8/tree/v2.2.170.redhat/components/fabric8-arquillian) OpenShift Integration Test. 
+Once the container image has been built and deployed in OpenShift, the integration test can be run with:
+
+    mvn test -Dtest=*KT
+
+The test is disabled by default and has to be enabled using `-Dtest`. Open Source Community documentation at [Integration Testing](https://fabric8.io/guide/testing.html) and [Fabric8 Arquillian Extension](https://fabric8.io/guide/arquillian.html) provide more information on writing full fledged black box integration tests for OpenShift. 

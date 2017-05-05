@@ -25,7 +25,7 @@
       "name": "GIT_REPO",
       "displayName": "Git Repository URL",
       "required": true,
-      "value": "https://github.com/sully6768/spring-boot-camel-xml.git",
+      "value": "https://github.com/sully6768/summit2017.git",
       "description": "The URL of the repository with your application source code."
     },
     {
@@ -39,7 +39,7 @@
       "name": "GIT_CONTEXT",
       "displayName": "Git Context",
       "required": false,
-      "value": "",
+      "value": "summit2017-fuse-camel-springboot",
       "description": "The subdirectory a project lives under."
     },
     {
