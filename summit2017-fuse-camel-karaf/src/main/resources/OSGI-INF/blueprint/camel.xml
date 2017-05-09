@@ -76,7 +76,7 @@
                 value="rest" />
             <apiProperty
                 key="api.version"
-                value="1.2.3" />
+                value="1.0.0" />
             <apiProperty
                 key="api.title"
                 value="User Services" />
@@ -121,6 +121,12 @@
                     name="body"
                     type="body"
                     description="The user to update or create" />
+                <responseMessage
+                    code="200"
+                    message="User added" />
+                <responseMessage
+                    code="404"
+                    message="Failed to add user" />
                 <to uri="bean:userService?method=updateUser" />
             </put>
 
@@ -137,12 +143,13 @@
         <!-- defines the rest services using the context-path /echo -->
         <rest
             path="/echo"
-            consumes="application/text"
-            produces="application/text">
+            consumes="application/json"
+            produces="application/json">
             <description>Echo rest service</description>
 
             <get uri="/ping">
                 <description>A ping service</description>
+                <responseMessage message="The Ping Response" />
                 <route>
                     <transform>
                         <constant>pong</constant>
