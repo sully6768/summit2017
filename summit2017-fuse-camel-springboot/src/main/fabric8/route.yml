@@ -1,10 +1,10 @@
 metadata:
-  name: summit2017-fuse-camel-sb
+  name: summit2017-fuse-camel-sp
 spec:
   host: people-service.apps.127.0.0.1.nip.io
   to:
     kind: Service
-    name: summit2017-fuse-camel-sb
+    name: summit2017-fuse-camel-sp
     weight: 100
   port:
     targetPort: http
